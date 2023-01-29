@@ -1,6 +1,4 @@
 echo off
-ghdl -a --ieee=synopsys --std=08 testbenches/sos_pkg.vhd
-ghdl -a --ieee=synopsys --std=08 testbenches/iir_filter_pkg.vhd
 
 ghdl -a --ieee=synopsys --std=08 source/hVHDL_analog_to_digital_drivers/sigma_delta/sigma_delta_cic_filter_pkg.vhd
 
@@ -39,6 +37,8 @@ ghdl -a --ieee=synopsys --std=08 source/hVHDL_math_library/multiplier/multiplier
 ghdl -a --ieee=synopsys --std=08 source/hVHDL_math_library/multiplier/multiplier_pkg.vhd
 ghdl -a --ieee=synopsys --std=08 source/hVHDL_math_library/sincos/sincos_pkg.vhd
 ghdl -a --ieee=synopsys --std=08 source/hVHDL_math_library/first_order_filter/first_order_filter_pkg.vhd
+
+ghdl -a --ieee=synopsys --std=08 testbenches/iir_filter_pkg.vhd
 
 ghdl -a --ieee=synopsys --std=08 source/hVHDL_math_library/real_to_fixed/real_to_fixed_pkg.vhd
 

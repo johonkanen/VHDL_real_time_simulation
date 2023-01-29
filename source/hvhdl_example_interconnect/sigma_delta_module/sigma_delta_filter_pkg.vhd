@@ -31,8 +31,13 @@ architecture rtl of sigma_delta_filter is
     signal sdm_clock_counter : integer range 0 to 15;
     signal sample_instant : integer range 0 to 7 := 3;
 
+    -- these gains were obtained with matlab using 
+    -- [b,a] = cheby1(6, 1, 1/30);
+    -- [sos, g] = tf2sos(b,a, 'down',2)
+
     constant fix_b1 : fix_array(0 to 2) := to_fixed((1.10112824474792e-003  , 2.19578135597009e-003  , 1.09466577037144e-003));
     constant fix_b2 : fix_array(0 to 2) := to_fixed((1.16088276025753e-003  , 2.32172985621810e-003  , 1.16086054728631e-003));
+    -- filter gain is added to last sos stage
     constant fix_b3 : fix_array(0 to 2) := to_fixed(((42.4644359704529e-003 , 85.1798866651586e-003  , 42.7159465798333e-003) / 58.875768));
     constant fix_a1 : fix_array(0 to 2) := to_fixed((1.00000000000000e+000  , -1.97840025988718e+000 , 987.883963652581e-003));
     constant fix_a2 : fix_array(0 to 2) := to_fixed((1.00000000000000e+000  , -1.96191974906017e+000 , 967.208461633959e-003));
@@ -110,11 +115,11 @@ begin
             connect_read_only_data_to_address(bus_from_master , bus_to_master , 257                , filter_bank(3)/2**(filter_wordlength-16));
             connect_read_only_data_to_address(bus_from_master , bus_to_master , 258                , filter_bank(4)/2**(filter_wordlength-16));
 
-            connect_read_only_data_to_address(bus_from_master , bus_to_master , 259                , fix_filter_out /2**0);
-            connect_read_only_data_to_address(bus_from_master , bus_to_master , 260                , fix_filter_out1/2**0);
-            connect_read_only_data_to_address(bus_from_master , bus_to_master , 261                , fix_filter_out2/2**0);
+            connect_read_only_data_to_address(bus_from_master , bus_to_master , 259                , fix_filter_out /2**(word_length-24));
+            connect_read_only_data_to_address(bus_from_master , bus_to_master , 260                , fix_filter_out1/2**(word_length-24));
+            connect_read_only_data_to_address(bus_from_master , bus_to_master , 261                , fix_filter_out2/2**(word_length-24));
 
-            connect_data_to_address(bus_from_master , bus_to_master , 259                , sample_instant);
+            connect_data_to_address(bus_from_master , bus_to_master , 262                , sample_instant);
 
             if sdm_clock_counter > 0 then
                 sdm_clock_counter <= sdm_clock_counter -1;
