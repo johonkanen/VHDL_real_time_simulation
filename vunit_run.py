@@ -13,6 +13,8 @@ float_library.add_source_files(ROOT / "source" / "hVHDL_floating_point" / "float
 float_library.add_source_files(ROOT / "source" / "hVHDL_floating_point" / "float_arithmetic_operations/*.vhd")
 
 filter_library = VU.add_library("filter_library")
+filter_library.add_source_files(ROOT / "source/hVHDL_math_library/multiplier/multiplier_base_types_18bit_pkg.vhd")
+filter_library.add_source_files(ROOT / "source/hVHDL_math_library/multiplier/multiplier_pkg.vhd")
 filter_library.add_source_files(ROOT / "testbenches/iir_filter_pkg.vhd")
 filter_library.add_source_files(ROOT / "testbenches/filter_simulation.vhd")
 

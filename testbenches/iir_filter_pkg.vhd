@@ -2,12 +2,14 @@ library ieee;
     use ieee.std_logic_1164.all;
     use ieee.numeric_std.all;
 
+    use work.multiplier_pkg;
+
 package iir_filter_pkg is
 
     type real_array is array (integer range <>) of real;
     type fix_array is array (integer range <>) of integer;
 
-    constant word_length  : integer := 31;
+    constant word_length  : integer := 32;
     constant integer_bits : integer := 8;
     constant fractional_bits : integer := word_length-integer_bits;
 
@@ -81,20 +83,13 @@ package body iir_filter_pkg is
         constant counter_offset : in integer
     ) is
     --------------------------
-        function "*"
-        (
-            left, right : integer
-        )
+        function "*" ( left: integer; right : integer)
         return integer
         is
-            variable s_left, s_right : signed(word_length downto 0);
-            variable mult_result     : signed(double_length downto 0);
         begin
-            s_left  := to_signed(left  , word_length+1);
-            s_right := to_signed(right , word_length+1);
-            mult_result := s_left * s_right;
-            return to_integer(mult_result(word_length + fractional_bits downto fractional_bits));
+            return work.multiplier_pkg.radix_multiply(left,right, word_length, fractional_bits);
         end "*";
+    ------------------------------
     --------------------------
     begin
         if counter = 0 + counter_offset then output    <= input * b_gains(0) + memory(0);                       end if;

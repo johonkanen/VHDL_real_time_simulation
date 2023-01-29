@@ -19,7 +19,7 @@ print("this should be again 44252 : ", uart.request_data_from_address(99))
 
 print("now we will get 200 000 data point stream from register 108, which corresponds with floating point filtered output")
 
-uart.write_data_to_address(259,0)
+uart.write_data_to_address(262,0)
 
 input_data = uart.stream_data_from_address(255, 15000)
 input1_data = uart.stream_data_from_address(261, 15000)
