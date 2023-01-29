@@ -18,7 +18,7 @@ package iir_filter_pkg is
     impure function to_fixed ( numbers : real_array)
         return fix_array;
 ------------------------------------------------------------------------
-    procedure testi (
+    procedure calculate_sos (
         signal memory : inout fix_array;
         input         : in integer;
         signal output : inout integer;
@@ -70,7 +70,7 @@ package body iir_filter_pkg is
         return return_array;
     end to_fixed;
 ------------------------------------------------------------------------
-    procedure testi
+    procedure calculate_sos
     (
         signal memory : inout fix_array;
         input         : in integer;
@@ -101,7 +101,7 @@ package body iir_filter_pkg is
         if counter = 1 + counter_offset then memory(0) <= input * b_gains(1) - output * a_gains(1) + memory(1); end if;
         if counter = 2 + counter_offset then memory(1) <= input * b_gains(2) - output * a_gains(2);             end if;
         
-    end testi;
+    end calculate_sos;
 
     function "*"
     (

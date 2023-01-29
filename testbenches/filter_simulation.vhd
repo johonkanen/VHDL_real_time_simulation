@@ -79,7 +79,7 @@ begin
 
     stimulus : process(simulator_clock)
     --------------------------
-        procedure real_testi
+        procedure calculate_real_sos
         (
             signal memory : inout real_array;
             input         : in real;
@@ -93,7 +93,7 @@ begin
             if counter = 0 + counter_offset then output    <= input * b_gains(0) + memory(0);                       end if;
             if counter = 1 + counter_offset then memory(0) <= input * b_gains(1) - output * a_gains(1) + memory(1); end if;
             if counter = 2 + counter_offset then memory(1) <= input * b_gains(2) - output * a_gains(2);             end if;
-        end real_testi;
+        end calculate_real_sos;
 
     --------------------------
     --------------------------
@@ -103,14 +103,14 @@ begin
             simulation_counter <= simulation_counter + 1;
 
             state_counter <= simulation_counter mod 5;
-            real_testi(memory1 , filter_input , filter_out  , state_counter , b1 , a1 , 0);
-            real_testi(memory2 , filter_out   , filter_out1 , state_counter , b2 , a2 , 1);
-            real_testi(memory3 , filter_out1  , filter_out2 , state_counter , b3 , a3 , 2);
+            calculate_real_sos(memory1 , filter_input , filter_out  , state_counter , b1 , a1 , 0);
+            calculate_real_sos(memory2 , filter_out   , filter_out1 , state_counter , b2 , a2 , 1);
+            calculate_real_sos(memory3 , filter_out1  , filter_out2 , state_counter , b3 , a3 , 2);
 
         ------------------------------------------------------------------------
-            testi(fix_memory1 , to_fixed(filter_input) , fix_filter_out  , state_counter , fix_b1 , fix_a1 , 0);
-            testi(fix_memory2 , fix_filter_out         , fix_filter_out1 , state_counter , fix_b2 , fix_a2 , 1);
-            testi(fix_memory3 , fix_filter_out1        , fix_filter_out2 , state_counter , fix_b3 , fix_a3 , 2);
+            calculate_sos(fix_memory1 , to_fixed(filter_input) , fix_filter_out  , state_counter , fix_b1 , fix_a1 , 0);
+            calculate_sos(fix_memory2 , fix_filter_out         , fix_filter_out1 , state_counter , fix_b2 , fix_a2 , 1);
+            calculate_sos(fix_memory3 , fix_filter_out1        , fix_filter_out2 , state_counter , fix_b3 , fix_a3 , 2);
 
             -- check values
             real_filter_output  <= filter_out2;

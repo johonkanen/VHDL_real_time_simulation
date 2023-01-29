@@ -131,9 +131,9 @@ begin
             if state_counter < 5 then
                 state_counter <= state_counter + 1;
             end if;
-            testi(fix_memory1 , to_fixed(cic_filter_data) , fix_filter_out  , state_counter , fix_b1 , fix_a1 , 0);
-            testi(fix_memory2 , fix_filter_out            , fix_filter_out1 , state_counter , fix_b2 , fix_a2 , 1);
-            testi(fix_memory3 , fix_filter_out1           , fix_filter_out2 , state_counter , fix_b3 , fix_a3 , 2);
+            calculate_sos(fix_memory1 , to_fixed(cic_filter_data) , fix_filter_out  , state_counter , fix_b1 , fix_a1 , 0);
+            calculate_sos(fix_memory2 , fix_filter_out            , fix_filter_out1 , state_counter , fix_b2 , fix_a2 , 1);
+            calculate_sos(fix_memory3 , fix_filter_out1           , fix_filter_out2 , state_counter , fix_b3 , fix_a3 , 2);
 
             cic_filter_data <= sdm_data;
             if sample_instant <= 5 then
