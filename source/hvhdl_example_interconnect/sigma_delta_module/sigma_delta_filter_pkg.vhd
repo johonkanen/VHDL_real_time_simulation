@@ -5,7 +5,10 @@ library ieee;
     use work.fpga_interconnect_pkg.all;
     use work.multiplier_pkg.radix_multiply;
     use work.sigma_delta_cic_filter_pkg.all;
-    use work.iir_filter_pkg.all;
+
+    use work.sos_filter_pkg.all;
+    use work.dsp_sos_filter_pkg.all;
+    use work.fixed_point_dsp_pkg.all;
 
 entity sigma_delta_filter is
     port (
@@ -47,12 +50,14 @@ architecture rtl of sigma_delta_filter is
     signal fix_memory2 : fix_array(0 to 1) := (others => 0);
     signal fix_memory3 : fix_array(0 to 1) := (others => 0);
 
-    signal filter_outputs : fix_array(0 to 2) := (others => 0);
-    alias fix_filter_out  is filter_outputs(0);
-    alias fix_filter_out1 is filter_outputs(1);
-    alias fix_filter_out2 is filter_outputs(2);
+    signal sos_filter1 : sos_filter_record := init_sos_filter;
+    signal sos_filter2 : sos_filter_record := init_sos_filter;
+    signal sos_filter3 : sos_filter_record := init_sos_filter;
 
-    signal state_counter : integer range 0 to 7;
+    signal fixed_point_dsp1 : fixed_point_dsp_record := init_fixed_point_dsp;
+    signal fixed_point_dsp2 : fixed_point_dsp_record := init_fixed_point_dsp;
+    signal fixed_point_dsp3 : fixed_point_dsp_record := init_fixed_point_dsp;
+
 begin
 
     sdm_clock_generator : process(system_clock)
@@ -115,9 +120,9 @@ begin
             connect_read_only_data_to_address(bus_from_master , bus_to_master , 257                , filter_bank(3)/2**(filter_wordlength-16));
             connect_read_only_data_to_address(bus_from_master , bus_to_master , 258                , filter_bank(4)/2**(filter_wordlength-16));
 
-            connect_read_only_data_to_address(bus_from_master , bus_to_master , 259                , fix_filter_out /2**(word_length-24));
-            connect_read_only_data_to_address(bus_from_master , bus_to_master , 260                , fix_filter_out1/2**(word_length-24));
-            connect_read_only_data_to_address(bus_from_master , bus_to_master , 261                , fix_filter_out2/2**(word_length-24));
+            connect_read_only_data_to_address(bus_from_master , bus_to_master , 259                , get_sos_filter_output(sos_filter1)/2**(word_length-24));
+            connect_read_only_data_to_address(bus_from_master , bus_to_master , 260                , get_sos_filter_output(sos_filter2)/2**(word_length-24));
+            connect_read_only_data_to_address(bus_from_master , bus_to_master , 261                , get_sos_filter_output(sos_filter3)/2**(word_length-24));
 
             connect_data_to_address(bus_from_master , bus_to_master , 262                , sample_instant);
 
@@ -133,24 +138,33 @@ begin
                 sdm_clock <= '0';
             end if;
 
-            if state_counter < 5 then
-                state_counter <= state_counter + 1;
+            create_fixed_point_dsp(fixed_point_dsp1);
+            create_fixed_point_dsp(fixed_point_dsp2);
+            create_fixed_point_dsp(fixed_point_dsp3);
+            create_sos_filter(sos_filter1, fixed_point_dsp1, fix_b1, fix_a1);
+            create_sos_filter(sos_filter2, fixed_point_dsp2, fix_b2, fix_a2);
+            create_sos_filter(sos_filter3, fixed_point_dsp3, fix_b3, fix_a3);
+
+            if sos_filter1.sos_filter_output_is_ready then
+                request_sos_filter(sos_filter2, get_sos_filter_output(sos_filter1));
             end if;
-            calculate_sos(fix_memory1 , to_fixed(cic_filter_data) , fix_filter_out  , state_counter , fix_b1 , fix_a1 , 0);
-            calculate_sos(fix_memory2 , fix_filter_out            , fix_filter_out1 , state_counter , fix_b2 , fix_a2 , 1);
-            calculate_sos(fix_memory3 , fix_filter_out1           , fix_filter_out2 , state_counter , fix_b3 , fix_a3 , 2);
+            if sos_filter2.sos_filter_output_is_ready then
+                request_sos_filter(sos_filter3, get_sos_filter_output(sos_filter2));
+            end if;
 
             cic_filter_data <= sdm_data;
             if sample_instant <= 5 then
                 if sdm_clock_counter = sample_instant then
                     calculate_cic_filter(cic_filter, cic_filter_data);
                     filter_bank <= filter_with_bank(filter_bank, cic_filter_data);
-                    state_counter <= 0;
+                    request_sos_filter(sos_filter1, to_fixed(cic_filter_data));
                 end if;
             else
                 if sdm_clock_counter = 5 then
                     calculate_cic_filter(cic_filter, cic_filter_data);
                     filter_bank <= filter_with_bank(filter_bank, cic_filter_data);
+                    request_sos_filter(sos_filter1, to_fixed(cic_filter_data));
+
                 end if;
             end if;
 

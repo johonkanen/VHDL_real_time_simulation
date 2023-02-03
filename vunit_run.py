@@ -17,6 +17,10 @@ filter_library.add_source_files(ROOT / "source/hVHDL_math_library/multiplier/mul
 filter_library.add_source_files(ROOT / "source/hVHDL_math_library/multiplier/multiplier_pkg.vhd")
 filter_library.add_source_files(ROOT / "testbenches/iir_filter_pkg.vhd")
 filter_library.add_source_files(ROOT / "testbenches/filter_simulation.vhd")
+filter_library.add_source_files(ROOT / "testbenches/test_first_order_filter_tb.vhd")
+
+test_library = VU.add_library("test_library")
+test_library.add_source_files(ROOT / "testbenches/test_real_to_signed_conversion_tb.vhd")
 
 # float_library.add_source_files(ROOT / "source/hVHDL_floating_point" / "normalizer / normalizer_configuration / normalizer_with_4_stage_pipe_pkg.vhd")
 # float_library.add_source_files(ROOT / "source/hVHDL_floating_point" / "normalizer / *.vhd")
