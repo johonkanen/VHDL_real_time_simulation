@@ -82,7 +82,7 @@ begin
         end "*";
         ------------------------------
 
-        constant filter_gain : real := 0.1;
+        constant filter_gain : real := 0.125;
 
 
     begin
