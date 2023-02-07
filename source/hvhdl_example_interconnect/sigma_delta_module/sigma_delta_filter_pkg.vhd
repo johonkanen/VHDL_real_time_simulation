@@ -82,7 +82,7 @@ begin
         end "*";
         ------------------------------
 
-        constant filter_gain : real := 0.125;
+        constant filter_gain : real := 0.1;
 
 
     begin
@@ -138,19 +138,12 @@ begin
                 sdm_clock <= '0';
             end if;
 
-            create_fixed_point_dsp(fixed_point_dsp1);
-            create_fixed_point_dsp(fixed_point_dsp2);
-            create_fixed_point_dsp(fixed_point_dsp3);
-            create_sos_filter(sos_filter1, fixed_point_dsp1, fix_b1, fix_a1);
-            create_sos_filter(sos_filter2, fixed_point_dsp2, fix_b2, fix_a2);
-            create_sos_filter(sos_filter3, fixed_point_dsp3, fix_b3, fix_a3);
+            create_sos_filter_and_dsp(sos_filter1, fixed_point_dsp1, fix_b1, fix_a1);
+            create_sos_filter_and_dsp(sos_filter2, fixed_point_dsp2, fix_b2, fix_a2);
+            create_sos_filter_and_dsp(sos_filter3, fixed_point_dsp3, fix_b3, fix_a3);
 
-            if sos_filter1.sos_filter_output_is_ready then
-                request_sos_filter(sos_filter2, get_sos_filter_output(sos_filter1));
-            end if;
-            if sos_filter2.sos_filter_output_is_ready then
-                request_sos_filter(sos_filter3, get_sos_filter_output(sos_filter2));
-            end if;
+            cascade_sos_filters(sos_filter1, sos_filter2);
+            cascade_sos_filters(sos_filter2, sos_filter3);
 
             cic_filter_data <= sdm_data;
             if sample_instant <= 5 then
