@@ -1,6 +1,7 @@
 library ieee;
     use ieee.std_logic_1164.all;
     use ieee.numeric_std.all;
+    use ieee.math_real.all;
 
     use work.fpga_interconnect_pkg.all;
     use work.multiplier_pkg.radix_multiply;
@@ -57,6 +58,34 @@ architecture rtl of sigma_delta_filter is
     signal fixed_point_dsp1 : fixed_point_dsp_record := init_fixed_point_dsp;
     signal fixed_point_dsp2 : fixed_point_dsp_record := init_fixed_point_dsp;
     signal fixed_point_dsp3 : fixed_point_dsp_record := init_fixed_point_dsp;
+
+    function fill_ram
+    (
+        ram_size : integer;
+        filter_gains : fix_array
+    )
+    return fix_array
+    is
+        variable returned_variable : fix_array(0 to ram_size-1);
+        constant set_value : fix_array := filter_gains;
+    begin
+        for i in 0 to ram_size-1 loop
+            returned_variable(i) := integer((2.0**15-1.0)*(sin(real(i)/real(ram_size)*2.0*math_pi)));
+        end loop;
+
+        returned_variable(0 to 4) := set_value;
+
+        return returned_variable;
+    end fill_ram;
+
+    constant ram : fix_array(0 to 31) := fill_ram(32,(fix_b1 & fix_a1(1) & fix_a1(2)));
+    signal ram_data    : integer;
+    signal ram_address : integer range 0 to ram'high := 0;
+
+    signal ram_data2    : integer;
+    signal ram_address2 : integer range 0 to ram'high := 0;
+
+    signal read_is_requested_with_1 : std_logic :='0';
 
 begin
 
@@ -116,15 +145,16 @@ begin
         if rising_edge(system_clock) then
             init_bus(bus_to_master);
             connect_read_only_data_to_address(bus_from_master , bus_to_master , 255                , get_cic_filter_output(cic_filter)+32768);
-            connect_read_only_data_to_address(bus_from_master , bus_to_master , 256                , filter_bank(2)/2**(filter_wordlength-16));
-            connect_read_only_data_to_address(bus_from_master , bus_to_master , 257                , filter_bank(3)/2**(filter_wordlength-16));
+            -- connect_read_only_data_to_address(bus_from_master , bus_to_master , 256                , filter_bank(2)/2**(filter_wordlength-16));
+            -- connect_read_only_data_to_address(bus_from_master , bus_to_master , 257                , filter_bank(3)/2**(filter_wordlength-16));
             connect_read_only_data_to_address(bus_from_master , bus_to_master , 258                , filter_bank(4)/2**(filter_wordlength-16));
 
-            connect_read_only_data_to_address(bus_from_master , bus_to_master , 259                , get_sos_filter_output(sos_filter1)/2**(word_length-24));
-            connect_read_only_data_to_address(bus_from_master , bus_to_master , 260                , get_sos_filter_output(sos_filter2)/2**(word_length-24));
+            -- connect_read_only_data_to_address(bus_from_master , bus_to_master , 259                , get_sos_filter_output(sos_filter1)/2**(word_length-24));
+            -- connect_read_only_data_to_address(bus_from_master , bus_to_master , 260                , get_sos_filter_output(sos_filter2)/2**(word_length-24));
             connect_read_only_data_to_address(bus_from_master , bus_to_master , 261                , get_sos_filter_output(sos_filter3)/2**(word_length-24));
 
             connect_data_to_address(bus_from_master , bus_to_master , 262                , sample_instant);
+            connect_read_only_data_to_address(bus_from_master , bus_to_master , 263                , ram_data2);
 
             if sdm_clock_counter > 0 then
                 sdm_clock_counter <= sdm_clock_counter -1;
@@ -138,9 +168,22 @@ begin
                 sdm_clock <= '0';
             end if;
 
-            create_sos_filter_and_dsp(sos_filter1, fixed_point_dsp1, fix_b1, fix_a1);
             create_sos_filter_and_dsp(sos_filter2, fixed_point_dsp2, fix_b2, fix_a2);
             create_sos_filter_and_dsp(sos_filter3, fixed_point_dsp3, fix_b3, fix_a3);
+
+            if ram_address < 5 then
+                ram_address <= ram_address + 1;
+            else
+                ram_address <= 0;
+            end if;
+
+            read_is_requested_with_1 <= '1';
+            if read_is_requested_with_1 = '1' then
+                ram_data <= ram(ram_address);
+            end if;
+
+            create_fixed_point_dsp(fixed_point_dsp1);
+            create_ram_sos_filter(sos_filter1, fixed_point_dsp1, ram_data, ram_address, false);
 
             cascade_sos_filters(sos_filter1, sos_filter2);
             cascade_sos_filters(sos_filter2, sos_filter3);

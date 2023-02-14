@@ -19,6 +19,10 @@ filter_library.add_source_files(ROOT / "testbenches/iir_filter_pkg.vhd")
 filter_library.add_source_files(ROOT / "testbenches/filter_simulation.vhd")
 filter_library.add_source_files(ROOT / "testbenches/test_first_order_filter_tb.vhd")
 
+i2s_library = VU.add_library("i2s_library")
+i2s_library.add_source_files(ROOT / "testbenches/i2s/i2s_pkg.vhd")
+i2s_library.add_source_files(ROOT / "testbenches/i2s/i2s_tb.vhd")
+
 test_library = VU.add_library("test_library")
 test_library.add_source_files(ROOT / "testbenches/test_real_to_signed_conversion_tb.vhd")
 

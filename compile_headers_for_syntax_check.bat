@@ -2,6 +2,8 @@ echo off
 
 ghdl -a --ieee=synopsys --std=08 source/hVHDL_analog_to_digital_drivers/sigma_delta/sigma_delta_cic_filter_pkg.vhd
 
+ghdl -a --ieee=synopsys --std=08 testbenches/i2s/i2s_pkg.vhd
+
 ghdl -a --ieee=synopsys --std=08 example_project_addresses_pkg.vhd
 
 ghdl -a --ieee=synopsys --std=08 source/hVHDL_fpga_interconnect/interconnect_configuration/data_15_address_15_bit_pkg.vhd
@@ -38,13 +40,15 @@ ghdl -a --ieee=synopsys --std=08 source/hVHDL_math_library/multiplier/multiplier
 ghdl -a --ieee=synopsys --std=08 source/hVHDL_math_library/sincos/sincos_pkg.vhd
 ghdl -a --ieee=synopsys --std=08 source/hVHDL_math_library/first_order_filter/first_order_filter_pkg.vhd
 
-ghdl -a --ieee=synopsys --std=08 testbenches/iir_filter_pkg.vhd
-
 ghdl -a --ieee=synopsys --std=08 source/hVHDL_math_library/real_to_fixed/real_to_fixed_pkg.vhd
 
 ghdl -a --ieee=synopsys --std=08 source/hVHDL_uart/uart_transreceiver/uart_tx/uart_tx_pkg.vhd
 ghdl -a --ieee=synopsys --std=08 source/hVHDL_uart/uart_transreceiver/uart_rx/uart_rx_pkg.vhd
 ghdl -a --ieee=synopsys --std=08 source/hVHDL_uart/uart_protocol/uart_protocol_pkg.vhd
+
+ghdl -a --ieee=synopsys --std=08 source/hVHDL_math_library/sos_filter/sos_filter_pkg.vhd
+ghdl -a --ieee=synopsys --std=08 source/hVHDL_math_library/testbenches/multiply_add/fixed_point_dsp_pkg.vhd
+ghdl -a --ieee=synopsys --std=08 source/hVHDL_math_library/sos_filter/dsp_sos_filter_pkg.vhd
 
 ghdl -a --ieee=synopsys --std=08 source/hvhdl_example_interconnect/sigma_delta_module/sigma_delta_filter_pkg.vhd
 
