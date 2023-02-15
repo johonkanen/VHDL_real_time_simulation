@@ -21,17 +21,18 @@ print("now we will get 200 000 data point stream from register 108, which corres
 
 uart.write_data_to_address(262,0)
 
-input_data = uart.stream_data_from_address(255, 15000)
-input1_data = uart.stream_data_from_address(261, 15000)
+input_data = uart.stream_data_from_address(10000, 15000)
+input1_data = uart.stream_data_from_address(10001, 15000)
 # float_test = uart.stream_data_from_address(108, 50000)
 # fixed_test = uart.stream_data_from_address(105, 50000)
-pyplot.subplot(1, 2, 1)
+# pyplot.subplot(1, 2, 1)
 # pyplot.plot(input_data-32768)
 # pyplot.plot(float_test-32768)
 # pyplot.subplot(1, 3, 3)
-pyplot.stairs(input_data-2**15)
-pyplot.subplot(1, 2, 2)
-pyplot.stairs(input1_data-2**15)
+pyplot.stairs(input_data-32767)
+pyplot.stairs(input1_data-32767)
+# pyplot.subplot(1, 2, 2)
+# pyplot.stairs(input1_data-2**15)
 
 pyplot.show()
 

@@ -9,11 +9,15 @@ package hvhdl_example_interconnect_pkg is
     type hvhdl_example_interconnect_FPGA_input_group is record
         communications_FPGA_in : communications_FPGA_input_group;
         sdm_data : std_logic;
+
+        adc_data : std_logic;
     end record;
     
     type hvhdl_example_interconnect_FPGA_output_group is record
         communications_FPGA_out : communications_FPGA_output_group;
         sdm_clock : std_logic;
+        bclk      : std_logic;
+        fsync     : std_logic;
     end record;
     
 end package hvhdl_example_interconnect_pkg;
@@ -30,7 +34,7 @@ library ieee;
     use work.fpga_interconnect_pkg.all;
     use work.first_order_filter_pkg.all;
     use work.example_filter_entity_pkg.all;
-
+    use work.i2s_pkg.all;
 
 entity hvhdl_example_interconnect is
     port (
@@ -72,7 +76,30 @@ architecture rtl of hvhdl_example_interconnect is
     constant filter_time_constant : real := 0.001;
 
 
+    signal i2s : i2s_record := init_i2s;
+    signal channel1_measurement : signed(31 downto 0);
+    signal channel2_measurement : signed(31 downto 0);
+
+
 begin
+
+    hvhdl_example_interconnect_FPGA_out.bclk <= i2s.bclk;
+    hvhdl_example_interconnect_FPGA_out.fsync <= i2s.fsynch;
+
+    test_i2s : process(system_clock)
+    begin
+        if rising_edge(system_clock) then
+            create_i2s_driver(i2s, hvhdl_example_interconnect_FPGA_in.adc_data);
+
+            if channel1_is_ready(i2s) then 
+                channel1_measurement <= get_measurement(i2s);
+            end if;
+
+            if channel2_is_ready(i2s) then 
+                channel2_measurement <= get_measurement(i2s);
+            end if;
+        end if; --rising_edge
+    end process test_i2s;	
 
     create_noisy_sine : process(system_clock)
     begin
@@ -88,6 +115,9 @@ begin
             connect_read_only_data_to_address(bus_from_master , bus_from_interconnect , input_sine_angle_address          , angle);
             connect_read_only_data_to_address(bus_from_master , bus_from_interconnect , noise_address                     , to_integer(signed(prbs7))+32768);
             connect_read_only_data_to_address(bus_from_master , bus_from_interconnect , noisy_sine_address                , sine_with_noise/2 + 32768);
+
+            connect_read_only_data_to_address(bus_from_master , bus_from_interconnect , 10e3   , to_integer(channel1_measurement(15 downto 0)) +32767);
+            connect_read_only_data_to_address(bus_from_master , bus_from_interconnect , 10e3+1 , to_integer(channel2_measurement(15 downto 0)) +32767);
 
             connect_data_to_address(bus_from_master           , bus_from_interconnect , example_interconnect_data_address , data_in_example_interconnect);
 

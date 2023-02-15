@@ -9,13 +9,32 @@ package i2s_pkg is
         bclk_counter   : integer range 0 to 7  ;
         fsynch         : std_logic             ;
         fsynch_counter : integer range 0 to 63 ;
+        data_shift_register : signed(31 downto 0);
+        i2s_data1_is_ready : boolean;
+        i2s_data2_is_ready : boolean;
     end record;
 
-    constant init_i2s : i2s_record := ('0', 7, '1', 31);
+    constant init_i2s : i2s_record := ('0', 7, '1', 63, (others => '0'), false, false);
 
     constant fsync_bclk_division : integer := 64;
 ------------------------------------------------------------------------
     procedure create_i2s_driver ( signal self : inout i2s_record);
+
+    procedure create_i2s_driver (
+        signal self : inout i2s_record;
+        adc_serial_input : std_logic);
+
+    function measurement_is_ready ( i2s_object : i2s_record)
+        return boolean;
+
+    function channel1_is_ready ( i2s_object : i2s_record)
+        return boolean;
+
+    function channel2_is_ready ( i2s_object : i2s_record)
+        return boolean;
+
+    function get_measurement ( i2s_object : i2s_record)
+        return signed;
 
 end package i2s_pkg;
 
@@ -60,5 +79,69 @@ package body i2s_pkg is
         end if;
         
     end create_i2s_driver;
+
+    procedure create_i2s_driver
+    (
+        signal self : inout i2s_record;
+        adc_serial_input : std_logic 
+    ) is
+    begin
+        create_i2s_driver(self);
+        if self.bclk_counter = 2 then
+            self.data_shift_register <= self.data_shift_register(30 downto 0) & adc_serial_input;
+        end if;
+
+        if (self.fsynch_counter = 31) and (self.bclk_counter = 2) then
+            self.i2s_data1_is_ready <= true;
+        else
+            self.i2s_data1_is_ready <= false;
+        end if;
+        if (self.fsynch_counter = 63) and (self.bclk_counter = 2) then
+            self.i2s_data2_is_ready <= true;
+        else
+            self.i2s_data2_is_ready <= false;
+        end if;
+    end create_i2s_driver;
+
+    function measurement_is_ready
+    (
+        i2s_object : i2s_record
+    )
+    return boolean
+    is
+    begin
+        return i2s_object.i2s_data1_is_ready or i2s_object.i2s_data2_is_ready;
+    end measurement_is_ready;
+
+    function channel1_is_ready
+    (
+        i2s_object : i2s_record
+    )
+    return boolean 
+    is
+    begin
+        return i2s_object.i2s_data1_is_ready;
+    end channel1_is_ready;
+
+    function channel2_is_ready
+    (
+        i2s_object : i2s_record
+    )
+    return boolean 
+    is
+    begin
+        return i2s_object.i2s_data2_is_ready;
+    end channel2_is_ready;
+
+    function get_measurement
+    (
+        i2s_object : i2s_record
+    )
+    return signed
+    is
+    begin
+        return i2s_object.data_shift_register;
+        
+    end get_measurement;
 
 end package body i2s_pkg;

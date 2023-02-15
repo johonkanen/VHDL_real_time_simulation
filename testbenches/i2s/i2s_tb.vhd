@@ -15,7 +15,7 @@ end;
 architecture vunit_simulation of i2s_tb is
 
     constant clock_period      : time    := 1 ns;
-    constant simtime_in_clocks : integer := 500;
+    constant simtime_in_clocks : integer := 1000;
     
     signal simulator_clock     : std_logic := '0';
     signal simulation_counter  : natural   := 0;
@@ -31,6 +31,7 @@ architecture vunit_simulation of i2s_tb is
     signal fsynch         : std_logic             ;
     signal fsynch_counter : integer range 0 to 63 ;
 
+    signal measurement : integer := 0;
 
 begin
 
@@ -52,8 +53,11 @@ begin
     begin
         if rising_edge(simulator_clock) then
             simulation_counter <= simulation_counter + 1;
-            create_i2s_driver(i2s);
+            create_i2s_driver(i2s, fsynch);
 
+            if measurement_is_ready(i2s) then
+                measurement <= to_integer(get_measurement(i2s));
+            end if;
 
         end if; -- rising_edge
     end process stimulus;	
