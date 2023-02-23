@@ -21,7 +21,7 @@ print("now we will get 200 000 data point stream from register 108, which corres
 
 uart.write_data_to_address(262,0)
 
-input_data = uart.stream_data_from_address(10000, 15000)
+input_data = uart.stream_data_from_address(10000, 500000)
 input1_data = uart.stream_data_from_address(10001, 15000)
 # float_test = uart.stream_data_from_address(108, 50000)
 # fixed_test = uart.stream_data_from_address(105, 50000)
