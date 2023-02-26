@@ -74,6 +74,12 @@ begin
 
     stimulus : process(simulator_clock)
     --------------------------------------------------
+        impure function i2c_clock_falling_edge return boolean is
+        begin
+            return i2c_clock_counter = clock_divider_max/2;
+            
+        end i2c_clock_falling_edge;
+    --------------------------------------------------
     begin
         if rising_edge(simulator_clock) then
             simulation_counter <= simulation_counter + 1;
@@ -82,6 +88,10 @@ begin
 
             if i2c_clock_counter = clock_divider_max/2 then
                 transmit_shift_register <= transmit_shift_register(transmit_shift_register'left -1 downto 0) & '0';
+            end if;
+
+            if i2c_clock_falling_edge then
+                transmit_bit_counter <= transmit_bit_counter + 1;
             end if;
 
         end if; -- rising_edge
