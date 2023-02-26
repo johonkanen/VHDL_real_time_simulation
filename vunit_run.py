@@ -17,6 +17,7 @@ i2s_library.add_source_files(ROOT / "testbenches/i2s/i2s_pkg.vhd")
 i2s_library.add_source_files(ROOT / "testbenches/i2s/i2s_tb.vhd")
 
 i2c_library = VU.add_library("i2c_library")
+i2c_library.add_source_files(ROOT / "other_sources/i2c_pkg.vhd")
 i2c_library.add_source_files(ROOT / "testbenches/i2c/i2c_tb.vhd")
 
 VU.main()

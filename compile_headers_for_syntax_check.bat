@@ -4,6 +4,8 @@ ghdl -a --ieee=synopsys --std=08 source/hVHDL_analog_to_digital_drivers/sigma_de
 
 ghdl -a --ieee=synopsys --std=08 testbenches/i2s/i2s_pkg.vhd
 
+ghdl -a --ieee=synopsys --std=08 other_sources/i2c_pkg.vhd
+
 ghdl -a --ieee=synopsys --std=08 example_project_addresses_pkg.vhd
 
 ghdl -a --ieee=synopsys --std=08 source/hVHDL_fpga_interconnect/interconnect_configuration/data_15_address_15_bit_pkg.vhd
