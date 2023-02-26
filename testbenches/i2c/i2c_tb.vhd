@@ -28,17 +28,24 @@ architecture vunit_simulation of i2c_tb is
     signal transmit_shift_register : std_logic_vector(15 downto 0) := (others => '1');
     signal receive_shift_register  : std_logic_vector(15 downto 0) := (others => '1');
 
-    constant start : std_logic_vector(0 downto 0) := "0"; --?
+    -- protocol
+    constant start            : std_logic_vector(0 downto 0) := "0"; --?
     constant i2c_address_0x20 : std_logic_vector(6 downto 0) := "0100000";
     constant i2c_address_0x21 : std_logic_vector(6 downto 0) := "0100001";
     constant i2c_address_0x22 : std_logic_vector(6 downto 0) := "0100010";
     constant i2c_address_0x23 : std_logic_vector(6 downto 0) := "0100011";
+    constant read_with_0      : std_logic := '0';
+    constant write_with_1     : std_logic := '1';
+    constant acknowledge      : std_logic := '0';
+    constant not_acknowledge  : std_logic := '1';
 
     subtype read_and_write_registers is integer range 0 to 80;
     subtype read_only_registers is integer range 96 to 127;
 
     -- sampled on rising edge
     signal ma12070_receive_register : std_logic_vector(15 downto 0) := (others => '0');
+
+    -- frame : start | address | read/write | ack | data | ack | stop
 
 begin
 
@@ -55,20 +62,33 @@ begin
 ------------------------------------------------------------------------
 
     stimulus : process(simulator_clock)
+    --------------------------------------------------
+        procedure create_i2c
+        (
+            signal counter : inout integer;
+            counter_max : integer;
+            signal clock_out : out std_logic 
+        ) is
+        begin
+            if counter > 0 then
+                counter <= counter - 1;
+            else
+                counter <= counter_max;
+            end if;
+
+            if counter > counter_max/2 then
+                clock_out <= '1';
+            else
+                clock_out <= '0';
+            end if;
+            
+        end create_i2c;
+    --------------------------------------------------
     begin
         if rising_edge(simulator_clock) then
             simulation_counter <= simulation_counter + 1;
-            if i2c_clock_counter > 0 then
-                i2c_clock_counter <= i2c_clock_counter - 1;
-            else
-                i2c_clock_counter <= clock_divider_max;
-            end if;
 
-            if i2c_clock_counter > clock_divider_max/2 then
-                i2c_clock <= '1';
-            else
-                i2c_clock <= '0';
-            end if;
+            create_i2c(i2c_clock_counter, clock_divider_max, i2c_clock);
 
             if i2c_clock_counter = clock_divider_max/2 then
                 transmit_shift_register <= transmit_shift_register(transmit_shift_register'left -1 downto 0) & '0';
