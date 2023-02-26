@@ -31,6 +31,7 @@ end package communications_pkg;
 library ieee;
     use ieee.std_logic_1164.all;
     use ieee.numeric_std.all;
+    use ieee.math_real.all;
 
     use work.communications_pkg.all;
     use work.fpga_interconnect_pkg.all;
@@ -63,6 +64,8 @@ architecture rtl of communications is
 
     signal number_of_registers_to_stream : integer range 0 to 2**23-1 := 0;
     signal stream_address : integer range 0 to 2**16-1 := 0;
+
+    -- constant uart_clock_divider : integer := (
 
 begin
 

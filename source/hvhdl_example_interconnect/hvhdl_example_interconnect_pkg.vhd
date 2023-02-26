@@ -8,14 +8,11 @@ package hvhdl_example_interconnect_pkg is
 
     type hvhdl_example_interconnect_FPGA_input_group is record
         communications_FPGA_in : communications_FPGA_input_group;
-        sdm_data : std_logic;
-
         adc_data : std_logic;
     end record;
     
     type hvhdl_example_interconnect_FPGA_output_group is record
         communications_FPGA_out : communications_FPGA_output_group;
-        sdm_clock : std_logic;
         bclk      : std_logic;
         fsync     : std_logic;
     end record;
@@ -28,8 +25,6 @@ library ieee;
     use ieee.numeric_std.all;
 
     use work.hvhdl_example_interconnect_pkg.all;
-	use work.multiplier_pkg.all;
-	use work.sincos_pkg.all;
     use work.communications_pkg.all;
     use work.fpga_interconnect_pkg.all;
     use work.first_order_filter_pkg.all;
@@ -48,12 +43,6 @@ architecture rtl of hvhdl_example_interconnect is
 
     use work.example_project_addresses_pkg.all;
 
-    signal multiplier : multiplier_record := init_multiplier;
-    signal sincos     : sincos_record     := init_sincos;
-
-    signal prbs7 : std_logic_vector(6 downto 0) := (0 => '1', others => '0');
-    signal sine_with_noise : int := 0;
-    signal angle : integer  range 0 to 2**16-1 := 0;
     signal i     : integer range 0 to 2**16-1 := 1199;
 
     signal communications_clocks   : communications_clock_group;
@@ -75,7 +64,6 @@ architecture rtl of hvhdl_example_interconnect is
     signal bus_from_sigma_delta : fpga_interconnect_record := init_fpga_interconnect;
     constant filter_time_constant : real := 0.001;
 
-
     signal i2s : i2s_record := init_i2s;
     signal channel1_measurement : signed(31 downto 0);
     signal channel2_measurement : signed(31 downto 0);
@@ -86,36 +74,14 @@ begin
     hvhdl_example_interconnect_FPGA_out.bclk <= i2s.bclk;
     hvhdl_example_interconnect_FPGA_out.fsync <= i2s.fsynch;
 
-    test_i2s : process(system_clock)
-    begin
-        if rising_edge(system_clock) then
-            create_i2s_driver(i2s, hvhdl_example_interconnect_FPGA_in.adc_data);
-
-            if channel1_is_ready(i2s) then 
-                channel1_measurement <= get_measurement(i2s);
-            end if;
-
-            if channel2_is_ready(i2s) then 
-                channel2_measurement <= get_measurement(i2s);
-            end if;
-        end if; --rising_edge
-    end process test_i2s;	
-
     create_noisy_sine : process(system_clock)
     begin
         if rising_edge(system_clock) then
-            create_multiplier(multiplier);
-            create_sincos(multiplier , sincos);
 
             init_example_filter(floating_point_filter_in);
             init_example_filter(fixed_point_filter_in);
 
             init_bus(bus_from_interconnect);
-            connect_read_only_data_to_address(bus_from_master , bus_from_interconnect , input_sine_address                , get_sine(sincos)/2 + 32768);
-            connect_read_only_data_to_address(bus_from_master , bus_from_interconnect , input_sine_angle_address          , angle);
-            connect_read_only_data_to_address(bus_from_master , bus_from_interconnect , noise_address                     , to_integer(signed(prbs7))+32768);
-            connect_read_only_data_to_address(bus_from_master , bus_from_interconnect , noisy_sine_address                , sine_with_noise/2 + 32768);
-
             connect_read_only_data_to_address(bus_from_master , bus_from_interconnect , 10e3   , to_integer(channel1_measurement(15 downto 0)) +32767);
             connect_read_only_data_to_address(bus_from_master , bus_from_interconnect , 10e3+1 , to_integer(channel2_measurement(15 downto 0)) +32767);
 
@@ -127,17 +93,19 @@ begin
                 i <= 1199;
             end if;
 
-            if i = 0 then
-                request_sincos(sincos, angle);
-                angle    <= (angle + 10) mod 2**16;
-                prbs7    <= prbs7(5 downto 0) & prbs7(6);
-                prbs7(6) <= prbs7(5) xor prbs7(0);
+            create_i2s_driver(i2s, hvhdl_example_interconnect_FPGA_in.adc_data);
+
+            if channel1_is_ready(i2s) then 
+                channel1_measurement <= get_measurement(i2s);
             end if;
 
-            if sincos_is_ready(sincos) then
-                sine_with_noise <= get_sine(sincos) + to_integer(signed(prbs7)*64);
-                request_example_filter(floating_point_filter_in, sine_with_noise);
-                request_example_filter(fixed_point_filter_in, sine_with_noise);
+            if channel2_is_ready(i2s) then 
+                channel2_measurement <= get_measurement(i2s);
+            end if;
+
+            if channel1_is_ready(i2s) then
+                request_example_filter(floating_point_filter_in, to_integer(channel1_measurement(15 downto 0)));
+                request_example_filter(fixed_point_filter_in, to_integer(channel1_measurement(15 downto 0)));
             end if;
 
         end if; --rising_edge
@@ -151,16 +119,6 @@ begin
     u_fixed_point_filter : entity work.example_filter_entity(fixed_point)
         generic map(filter_time_constant => filter_time_constant)
         port map(system_clock, fixed_point_filter_in, bus_from_master, bus_from_fixed_point_filter);
-
----------------
- u_sigma_delta_filter : entity work.sigma_delta_filter
-    port map(
-        system_clock    => system_clock,
-        bus_from_master => bus_from_master,
-        bus_to_master   => bus_from_sigma_delta,
-        sdm_data        => hvhdl_example_interconnect_FPGA_in.sdm_data,
-        sdm_clock       => hvhdl_example_interconnect_FPGA_out.sdm_clock
-    );
 
 ------------------------------------------------------------------------
 ------------------------------------------------------------------------
