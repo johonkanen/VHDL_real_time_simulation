@@ -19,3 +19,6 @@
 [submodule "source/hVHDL_analog_to_digital_drivers"]
 	path = source/hVHDL_analog_to_digital_drivers
 	url = https://github.com/hVHDL/hVHDL_analog_to_digital_drivers.git
+[submodule "source/hVHDL_dynamic_model_verification_library"]
+	path = source/hVHDL_dynamic_model_verification_library
+	url = https://github.com/hVHDL/hVHDL_dynamic_model_verification_library.git
