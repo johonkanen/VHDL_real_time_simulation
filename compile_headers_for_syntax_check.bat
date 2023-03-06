@@ -2,6 +2,7 @@ echo off
 
 ghdl -a --ieee=synopsys --std=08 source/hVHDL_analog_to_digital_drivers/sigma_delta/sigma_delta_cic_filter_pkg.vhd
 
+
 ghdl -a --ieee=synopsys --std=08 testbenches/i2s/i2s_pkg.vhd
 
 ghdl -a --ieee=synopsys --std=08 other_sources/i2c_pkg.vhd
@@ -43,6 +44,12 @@ ghdl -a --ieee=synopsys --std=08 source/hVHDL_math_library/sincos/sincos_pkg.vhd
 ghdl -a --ieee=synopsys --std=08 source/hVHDL_math_library/first_order_filter/first_order_filter_pkg.vhd
 
 ghdl -a --ieee=synopsys --std=08 source/hVHDL_math_library/real_to_fixed/real_to_fixed_pkg.vhd
+rem ghdl -a --ieee=synopsys --std=08 source/hVHDL_dynamic_model_verification_library/hVHDL_math_library/real_to_fixed/real_to_fixed_pkg.vhd
+rem ghdl -a --ieee=synopsys --std=08 source/hVHDL_dynamic_model_verification_library/hVHDL_math_library/multiplier/multiplier_base_types_26bit_pkg.vhd
+rem ghdl -a --ieee=synopsys --std=08 source/hVHDL_dynamic_model_verification_library/hVHDL_math_library/multiplier/multiplier_pkg.vhd                
+ghdl -a --ieee=synopsys --std=08 source/hVHDL_dynamic_model_verification_library/state_variable/state_variable_pkg.vhd                          
+ghdl -a --ieee=synopsys --std=08 source/hVHDL_dynamic_model_verification_library/lcr_filter_model/lcr_filter_model_pkg.vhd                     
+
 
 ghdl -a --ieee=synopsys --std=08 source/hVHDL_uart/uart_transreceiver/uart_tx/uart_tx_pkg.vhd
 ghdl -a --ieee=synopsys --std=08 source/hVHDL_uart/uart_transreceiver/uart_rx/uart_rx_pkg.vhd
