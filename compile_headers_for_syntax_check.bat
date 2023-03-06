@@ -50,6 +50,7 @@ rem ghdl -a --ieee=synopsys --std=08 source/hVHDL_dynamic_model_verification_lib
 ghdl -a --ieee=synopsys --std=08 source/hVHDL_dynamic_model_verification_library/state_variable/state_variable_pkg.vhd                          
 ghdl -a --ieee=synopsys --std=08 source/hVHDL_dynamic_model_verification_library/lcr_filter_model/lcr_filter_model_pkg.vhd                     
 
+ghdl -a --ieee=synopsys --std=08 source/hil_simulation/hil_simulation_pkg.vhd
 
 ghdl -a --ieee=synopsys --std=08 source/hVHDL_uart/uart_transreceiver/uart_tx/uart_tx_pkg.vhd
 ghdl -a --ieee=synopsys --std=08 source/hVHDL_uart/uart_transreceiver/uart_rx/uart_rx_pkg.vhd

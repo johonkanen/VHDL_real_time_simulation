@@ -8,16 +8,16 @@ library ieee;
     use work.lcr_filter_model_pkg.all;
     use work.real_to_fixed_pkg.all;
 
-entity hil_simulator is
+entity hil_simulation is
     port (
         clk : in std_logic	;
         bus_to_hil_simulator   : in fpga_interconnect_record;
         bus_from_hil_simulator : out fpga_interconnect_record
     );
-end entity hil_simulator;
+end entity hil_simulation;
 
 
-architecture rtl of hil_simulator is
+architecture rtl of hil_simulation is
 
     constant L1_inductance : real := 1.0e-3;
     constant L2_inductance : real := 10.0e-6;
@@ -95,10 +95,10 @@ begin
             if simulation_counter > 0 then
                 simulation_counter <= simulation_counter - 1;
             else
-                simulation_counter <= 119;
+                -- simulation_counter <= 20;
             end if;
 
-            if simulation_counter = 0 then
+            if simulation_counter = 1 or lcr_filter_calculation_is_ready(primary_lc) then
                 request_lcr_filter_calculation(input_lc1 );
                 request_lcr_filter_calculation(input_lc2 );
                 request_lcr_filter_calculation(primary_lc);
