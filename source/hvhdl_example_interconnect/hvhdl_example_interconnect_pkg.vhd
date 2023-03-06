@@ -68,6 +68,7 @@ architecture rtl of hvhdl_example_interconnect is
     signal channel1_measurement : signed(31 downto 0);
     signal channel2_measurement : signed(31 downto 0);
 
+    signal bus_from_hil : fpga_interconnect_record := init_fpga_interconnect;
 
 begin
 
@@ -121,11 +122,13 @@ begin
         port map(system_clock, fixed_point_filter_in, bus_from_master, bus_from_fixed_point_filter);
 
 ------------------------------------------------------------------------
+    u_hil : entity work.hil_simulation
+    port map(system_clock, bus_from_master, bus_from_hil);
 ------------------------------------------------------------------------
     combine_buses : process(system_clock)
     begin
         if rising_edge(system_clock) then
-            bus_to_master <= bus_from_interconnect and bus_from_floating_point_filter and bus_from_fixed_point_filter and bus_from_sigma_delta;
+            bus_to_master <= bus_from_interconnect and bus_from_floating_point_filter and bus_from_fixed_point_filter and bus_from_sigma_delta and bus_from_hil;
         end if; --rising_edge
     end process combine_buses;	
 

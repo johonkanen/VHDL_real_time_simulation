@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<efx:project name="hVHDL_example_titanium" description="" last_change_date="Mon March 6 2023 19:40:33" location="C:/Users/Jari/mycodeprojects/VHDL_real_time_simulation/efinix_titanium_build" sw_version="2022.2.322.2.14" last_run_state="pass" last_run_tool="efx_pgm" last_run_flow="bitstream" config_result_in_sync="sync" design_ood="sync" place_ood="sync" route_ood="sync" xmlns:efx="http://www.efinixinc.com/enf_proj" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.efinixinc.com/enf_proj enf_proj.xsd">
+<efx:project name="hVHDL_example_titanium" description="" last_change_date="Tue March 7 2023 01:47:30" location="C:/Users/Jari/mycodeprojects/VHDL_real_time_simulation/efinix_titanium_build" sw_version="2022.2.322.2.14" last_run_state="pass" last_run_tool="efx_map" last_run_flow="syn" config_result_in_sync="sync" design_ood="sync" place_ood="sync" route_ood="sync" xmlns:efx="http://www.efinixinc.com/enf_proj" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.efinixinc.com/enf_proj enf_proj.xsd">
     <efx:device_info>
         <efx:family name="Titanium"/>
         <efx:device name="Ti60F225"/>
@@ -8,13 +8,12 @@
     <efx:design_info def_veri_version="sv_09" def_vhdl_version="vhdl_2008">
         <efx:top_module name="efinix_top"/>
         <efx:design_file name="../source/efinix_top.vhd" version="default" library="default"/>
-        <efx:design_file name="../source/hVHDL_dynamic_model_verification_library/hVHDL_math_library/real_to_fixed/real_to_fixed_pkg.vhd" version="default" library="hil_library"/>
-        <efx:design_file name="../source/hVHDL_dynamic_model_verification_library/hVHDL_math_library/multiplier/multiplier_base_types_26bit_pkg.vhd" version="default" library="hil_library"/>
-        <efx:design_file name="../source/hVHDL_dynamic_model_verification_library/hVHDL_math_library/multiplier/multiplier_pkg.vhd" version="default" library="hil_library"/>
-        <efx:design_file name="../source/hVHDL_dynamic_model_verification_library/state_variable/state_variable_pkg.vhd" version="default" library="hil_library"/>
-        <efx:design_file name="../source/hVHDL_dynamic_model_verification_library/lcr_filter_model/lcr_filter_model_pkg.vhd" version="default" library="hil_library"/>
-        <efx:design_file name="../source/hVHDL_math_library/multiplier/multiplier_base_types_18bit_pkg.vhd" version="default" library="default"/>
-        <efx:design_file name="../source/hVHDL_math_library/multiplier/multiplier_pkg.vhd" version="default" library="default"/>
+        <efx:design_file name="../source/hVHDL_dynamic_model_verification_library/hVHDL_math_library/real_to_fixed/real_to_fixed_pkg.vhd" version="default" library="default"/>
+        <efx:design_file name="../source/hVHDL_dynamic_model_verification_library/hVHDL_math_library/multiplier/multiplier_base_types_26bit_pkg.vhd" version="default" library="default"/>
+        <efx:design_file name="../source/hVHDL_dynamic_model_verification_library/hVHDL_math_library/multiplier/multiplier_pkg.vhd" version="default" library="default"/>
+        <efx:design_file name="../source/hVHDL_dynamic_model_verification_library/state_variable/state_variable_pkg.vhd" version="default" library="default"/>
+        <efx:design_file name="../source/hVHDL_dynamic_model_verification_library/lcr_filter_model/lcr_filter_model_pkg.vhd" version="default" library="default"/>
+        <efx:design_file name="../source/hil_simulation/hil_simulation_pkg.vhd" version="default" library="default"/>
         <efx:design_file name="../source/hVHDL_math_library/sincos/sincos_pkg.vhd" version="default" library="default"/>
         <efx:design_file name="../source/hVHDL_math_library/first_order_filter/first_order_filter_pkg.vhd" version="default" library="default"/>
         <efx:design_file name="../source/hVHDL_uart/uart_transreceiver/uart_rx/uart_rx_pkg.vhd" version="default" library="default"/>
