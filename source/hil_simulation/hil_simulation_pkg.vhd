@@ -27,7 +27,7 @@ architecture rtl of hil_simulation is
     signal input_voltage : integer := 0;
     signal load_current : integer := 0;
 
-    signal simulation_counter : integer range 0 to 119 := 119;
+    signal simulation_counter : integer range 0 to 2047 := 1199;
     signal duty_ratio : integer := 2**14;
 
 begin
@@ -55,7 +55,7 @@ begin
             if simulation_counter > 0 then
                 simulation_counter <= simulation_counter - 1;
             else
-                simulation_counter <= 119;
+                simulation_counter <= 1119;
             end if;
 
             if simulation_counter = 0 then
