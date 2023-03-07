@@ -19,14 +19,10 @@ architecture rtl of hil_simulation is
 
     signal filtered_buck : filtered_buck_record := init_filtered_buck;
 
-    signal output_voltage   : real := 0.0;
-    signal inductor_current : real := 0.0;
-
     signal input_voltage : integer := 0;
     signal load_current : integer := 0;
 
     signal simulation_counter : integer range 0 to 2047 := 1199;
-    signal duty_ratio : integer := 2**14;
 
 begin
 
