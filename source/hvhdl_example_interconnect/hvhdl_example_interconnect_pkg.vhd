@@ -112,14 +112,14 @@ begin
         end if; --rising_edge
     end process;	
 ---------------
-    u_floating_point_filter : entity work.example_filter_entity(float)
-        generic map(filter_time_constant => filter_time_constant)
-        port map(system_clock, floating_point_filter_in, bus_from_master, bus_from_floating_point_filter);
-
----------------
-    u_fixed_point_filter : entity work.example_filter_entity(fixed_point)
-        generic map(filter_time_constant => filter_time_constant)
-        port map(system_clock, fixed_point_filter_in, bus_from_master, bus_from_fixed_point_filter);
+--     u_floating_point_filter : entity work.example_filter_entity(float)
+--         generic map(filter_time_constant => filter_time_constant)
+--         port map(system_clock, floating_point_filter_in, bus_from_master, bus_from_floating_point_filter);
+--
+-- ---------------
+--     u_fixed_point_filter : entity work.example_filter_entity(fixed_point)
+--         generic map(filter_time_constant => filter_time_constant)
+--         port map(system_clock, fixed_point_filter_in, bus_from_master, bus_from_fixed_point_filter);
 
 ------------------------------------------------------------------------
     u_hil : entity work.hil_simulation

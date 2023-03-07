@@ -24,6 +24,10 @@ architecture vunit_simulation of hil_simulation_tb is
 
     signal bus_from_stimulus : fpga_interconnect_record := init_fpga_interconnect;
     signal bus_from_hil : fpga_interconnect_record := init_fpga_interconnect;
+    signal voltage : integer := 0;
+    signal current : integer := 0;
+
+    signal receive_counter : integer := 0;
 
 begin
 
@@ -46,6 +50,33 @@ begin
             simulation_counter <= simulation_counter + 1;
             init_bus(bus_from_stimulus);
 
+
+            if simulation_counter mod 2 = 0 then
+                request_data_from_address(bus_from_stimulus, 1000);
+            else
+                request_data_from_address(bus_from_stimulus, 1001);
+            end if;
+
+            if simulation_counter = 1000 then
+                write_data_to_address(bus_from_stimulus, 1002, 12800);
+            end if;
+
+
+            if write_to_address_is_requested(bus_from_hil, 0) then
+                if receive_counter = 0 then
+                    receive_counter <= receive_counter + 1;
+                else
+                    receive_counter <= 0;
+                end if;
+            end if;
+
+            if write_to_address_is_requested(bus_from_hil,0) then
+                if receive_counter = 0 then
+                    current <= get_data(bus_from_hil);
+                else
+                    voltage <= get_data(bus_from_hil);
+                end if;
+            end if;
 
         end if; -- rising_edge
     end process stimulus;	

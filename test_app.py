@@ -1,5 +1,6 @@
 import os
 import sys
+import time
 
 abs_path = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(abs_path + '/fpga_uart_pc_software/')
@@ -8,31 +9,23 @@ from uart_communication_functions import *
 
 uart = uart_link("COM23", 5e6)
 
-print("test reading data from hvhdl example interconnect")
-print("this should be 44252 : ", uart.request_data_from_address(99)) 
-print("now write 37 to the same address with write_data_to_address(99,37)")
-uart.write_data_to_address(99,37)
-print("the register should now read 37 : ", uart.request_data_from_address(99)) 
-print("we will now write back 44252 with with write_data_to_address(99,44252)")
-uart.write_data_to_address(99,44252)
-print("this should be again 44252 : ", uart.request_data_from_address(99)) 
+number_of_datapoints_to_stream = 30000
+print("run a transient test")
 
-print("now we will get 200 000 data point stream from register 108, which corresponds with floating point filtered output")
+voltage_gain = 400/12800;
 
-uart.write_data_to_address(262,0)
+uart.request_data_stream_from_address(1007, number_of_datapoints_to_stream)
+uart.write_data_to_address(1000, 2000);
+time.sleep(0.03)
+uart.write_data_to_address(1001, 10000);
+time.sleep(0.03)
+uart.write_data_to_address(1001, 0);
+time.sleep(0.03)
 
-input_data = uart.stream_data_from_address(10000, 500000)
-input1_data = uart.stream_data_from_address(10001, 15000)
-# float_test = uart.stream_data_from_address(108, 50000)
-# fixed_test = uart.stream_data_from_address(105, 50000)
-# pyplot.subplot(1, 2, 1)
-# pyplot.plot(input_data-32768)
-# pyplot.plot(float_test-32768)
-# pyplot.subplot(1, 3, 3)
-pyplot.stairs(input_data-32767)
-pyplot.stairs(input1_data-32767)
-# pyplot.subplot(1, 2, 2)
-# pyplot.stairs(input1_data-2**15)
+transient_data = uart.get_streamed_data(number_of_datapoints_to_stream)
+pyplot.plot((transient_data-32768)*voltage_gain)
+pyplot.show()
+uart.write_data_to_address(1000, 0);
+
 
 pyplot.show()
-
