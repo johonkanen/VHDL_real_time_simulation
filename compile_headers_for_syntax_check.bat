@@ -49,6 +49,7 @@ rem ghdl -a --ieee=synopsys --std=08 source/hVHDL_dynamic_model_verification_lib
 rem ghdl -a --ieee=synopsys --std=08 source/hVHDL_dynamic_model_verification_library/hVHDL_math_library/multiplier/multiplier_pkg.vhd                
 ghdl -a --ieee=synopsys --std=08 source/hVHDL_dynamic_model_verification_library/state_variable/state_variable_pkg.vhd                          
 ghdl -a --ieee=synopsys --std=08 source/hVHDL_dynamic_model_verification_library/lcr_filter_model/lcr_filter_model_pkg.vhd                     
+ghdl -a --ieee=synopsys --std=08 source/hVHDL_dynamic_model_verification_library/buck_simulation_model/filtered_buck_model_pkg.vhd
 
 ghdl -a --ieee=synopsys --std=08 source/hil_simulation/hil_simulation_pkg.vhd
 
