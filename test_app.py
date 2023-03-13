@@ -19,13 +19,13 @@ def get_voltage(address):
 
     uart.request_data_stream_from_address(address, number_of_datapoints_to_stream)
     time.sleep(0.025)
-    uart.write_data_to_address(1000, int(voltage_to_fixed_point*400))
+    uart.write_data_to_address(1012, 20000) 
     time.sleep(0.1)
     uart.write_data_to_address(1001, 2000);
     time.sleep(0.1)
     uart.write_data_to_address(1001, 0);
     time.sleep(0.1)
-    uart.write_data_to_address(1000, int(voltage_to_fixed_point*390))
+    uart.write_data_to_address(1012, 65536-20000)
     return (uart.get_streamed_data(number_of_datapoints_to_stream)-32768)*voltage_gain
 
 def get_current(address):

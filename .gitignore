@@ -16,3 +16,4 @@ ecp5_build/IP/testi/*
 *.isf
 __pycache__
 *.dat
+*.o

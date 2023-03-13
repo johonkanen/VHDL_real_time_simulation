@@ -5,6 +5,7 @@ library ieee;
     use work.fpga_interconnect_pkg.all;
     use work.lcr_filter_model_pkg.all;
     use work.filtered_buck_model_pkg.all;
+    use work.real_to_fixed_pkg.to_fixed;
 
 entity hil_simulation is
     port (
@@ -23,6 +24,7 @@ architecture rtl of hil_simulation is
     signal load_current : integer := 0;
 
     signal simulation_counter : integer range 0 to 2047 := 1199;
+    signal duty_ratio : integer range -2**15 to 2**15-1 := to_fixed(0.5, 15);
 
 begin
 
@@ -43,8 +45,9 @@ begin
             connect_read_only_data_to_address(bus_to_hil_simulator , bus_from_hil_simulator , 1009 , get_capacitor_voltage(filtered_buck.output_lc1) / 2**10+32768);
             connect_read_only_data_to_address(bus_to_hil_simulator , bus_from_hil_simulator , 1010 , get_inductor_current(filtered_buck.output_lc2)  / 2**7+32768);
             connect_read_only_data_to_address(bus_to_hil_simulator , bus_from_hil_simulator , 1011 , get_capacitor_voltage(filtered_buck.output_lc2) / 2**10+32768);
+            connect_data_to_address(bus_to_hil_simulator           , bus_from_hil_simulator , 1012 , duty_ratio);
 
-            create_filtered_buck(filtered_buck, input_voltage*2**10, load_current*2**7);
+            create_filtered_buck(filtered_buck, duty_ratio, input_voltage*2**10, load_current*2**7);
 
             if simulation_counter > 0 then
                 simulation_counter <= simulation_counter - 1;
