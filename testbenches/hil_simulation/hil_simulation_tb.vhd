@@ -58,7 +58,11 @@ begin
             end if;
 
             if simulation_counter = 1000 then
-                write_data_to_address(bus_from_stimulus, 1002, 12800);
+                write_data_to_address(bus_from_stimulus, 1000, 12800);
+            end if;
+
+            if simulation_counter = 1012 then
+                write_data_to_address(bus_from_stimulus, 1012, 16384);
             end if;
 
 

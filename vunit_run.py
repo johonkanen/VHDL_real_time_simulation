@@ -16,17 +16,19 @@ i2s_library = VU.add_library("i2s_library")
 i2s_library.add_source_files(ROOT / "testbenches/i2s/i2s_pkg.vhd")
 i2s_library.add_source_files(ROOT / "testbenches/i2s/i2s_tb.vhd")
 
-i2c_library = VU.add_library("i2c_library")
-i2c_library.add_source_files(ROOT / "other_sources/i2c_pkg.vhd")
-i2c_library.add_source_files(ROOT / "testbenches/i2c/i2c_tb.vhd")
-
 math_library_26x26 = VU.add_library("math_library_26x26")
 
 math_library_26x26.add_source_files(ROOT / "source/hVHDL_dynamic_model_verification_library/hVHDL_math_library/real_to_fixed/real_to_fixed_pkg.vhd            ")
 math_library_26x26.add_source_files(ROOT / "source/hVHDL_dynamic_model_verification_library/hVHDL_math_library/multiplier/multiplier_base_types_26bit_pkg.vhd ")
 math_library_26x26.add_source_files(ROOT / "source/hVHDL_dynamic_model_verification_library/hVHDL_math_library/multiplier/multiplier_pkg.vhd                  ")
+math_library_26x26.add_source_files(ROOT / "source/hVHDL_math_library/division/division_internal_pkg.vhd")
+math_library_26x26.add_source_files(ROOT / "source/hVHDL_math_library/division/division_pkg.vhd")
+math_library_26x26.add_source_files(ROOT / "source/hVHDL_math_library/division/division_pkg_body.vhd")
+
+
 math_library_26x26.add_source_files(ROOT / "source/hVHDL_dynamic_model_verification_library/state_variable/state_variable_pkg.vhd                             ")
 math_library_26x26.add_source_files(ROOT / "source/hVHDL_dynamic_model_verification_library/lcr_filter_model/lcr_filter_model_pkg.vhd                         ")
+math_library_26x26.add_source_files(ROOT / "source/hVHDL_dynamic_model_verification_library/buck_simulation_model/filtered_buck_model_pkg.vhd")
 math_library_26x26.add_source_files(ROOT / "source/hVHDL_fpga_interconnect/interconnect_configuration/data_15_address_15_bit_pkg.vhd")
 math_library_26x26.add_source_files(ROOT / "source/hVHDL_fpga_interconnect/fpga_interconnect_pkg.vhd")
 math_library_26x26.add_source_files(ROOT / "source/hil_simulation/hil_simulation_pkg.vhd")
