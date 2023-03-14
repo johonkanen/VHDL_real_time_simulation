@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<efx:project name="hVHDL_example_titanium" description="" last_change_date="Mon March 13 2023 20:08:37" location="C:/Users/Jari/mycodeprojects/VHDL_real_time_simulation/efinix_titanium_build" sw_version="2022.2.322.2.14" last_run_state="pass" last_run_tool="efx_pgm" last_run_flow="bitstream" config_result_in_sync="sync" design_ood="sync" place_ood="sync" route_ood="sync" xmlns:efx="http://www.efinixinc.com/enf_proj" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.efinixinc.com/enf_proj enf_proj.xsd">
+<efx:project name="hVHDL_example_titanium" description="" last_change_date="Tue March 14 2023 22:01:39" location="C:/Users/Jari/mycodeprojects/VHDL_real_time_simulation/efinix_titanium_build" sw_version="2022.2.322.2.14" last_run_state="pass" last_run_tool="efx_pgm" last_run_flow="bitstream" config_result_in_sync="sync" design_ood="sync" place_ood="sync" route_ood="sync" xmlns:efx="http://www.efinixinc.com/enf_proj" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.efinixinc.com/enf_proj enf_proj.xsd">
     <efx:device_info>
         <efx:family name="Titanium"/>
         <efx:device name="Ti60F225"/>
@@ -49,6 +49,9 @@
         <efx:design_file name="../other_sources/float_word_length_32_bit_pkg.vhd" version="default" library="default"/>
         <efx:design_file name="../source/hVHDL_math_library/real_to_fixed/real_to_fixed_pkg.vhd" version="default" library="default"/>
         <efx:design_file name="../source/hVHDL_dynamic_model_verification_library/buck_simulation_model/filtered_buck_model_pkg.vhd" version="default" library="default"/>
+        <efx:design_file name="../source/hVHDL_math_library/division/division_pkg.vhd" version="default" library="default"/>
+        <efx:design_file name="../source/hVHDL_math_library/division/division_pkg_body.vhd" version="default" library="default"/>
+        <efx:design_file name="../source/hVHDL_math_library/division/division_internal_pkg.vhd" version="default" library="default"/>
         <efx:top_vhdl_arch name="rtl"/>
     </efx:design_info>
     <efx:constraint_info>

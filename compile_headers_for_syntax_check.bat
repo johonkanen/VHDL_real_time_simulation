@@ -40,6 +40,9 @@ ghdl -a --ieee=synopsys --std=08 source/hVHDL_memory_library/fpga_ram/ram_read_p
 
 ghdl -a --ieee=synopsys --std=08 source/hVHDL_math_library/multiplier/multiplier_base_types_18bit_pkg.vhd
 ghdl -a --ieee=synopsys --std=08 source/hVHDL_math_library/multiplier/multiplier_pkg.vhd
+ghdl -a --ieee=synopsys --std=08 source/hVHDL_math_library/division/division_internal_pkg.vhd
+ghdl -a --ieee=synopsys --std=08 source/hVHDL_math_library/division/division_pkg.vhd
+ghdl -a --ieee=synopsys --std=08 source/hVHDL_math_library/division/division_pkg_body.vhd
 ghdl -a --ieee=synopsys --std=08 source/hVHDL_math_library/sincos/sincos_pkg.vhd
 ghdl -a --ieee=synopsys --std=08 source/hVHDL_math_library/first_order_filter/first_order_filter_pkg.vhd
 
