@@ -38,6 +38,7 @@ ghdl -a --ieee=synopsys --std=08 source/hvhdl_example_interconnect/example_filte
 ghdl -a --ieee=synopsys --std=08 source/hVHDL_memory_library/fpga_ram/ram_configuration/ram_configuration_16x1024_pkg.vhd
 ghdl -a --ieee=synopsys --std=08 source/hVHDL_memory_library/fpga_ram/ram_read_port_pkg.vhd
 
+ghdl -a --ieee=synopsys --std=08 source/hVHDL_math_library/multiplier/configuration/multiply_with_1_input_and_output_registers_pkg.vhd
 ghdl -a --ieee=synopsys --std=08 source/hVHDL_math_library/multiplier/multiplier_base_types_18bit_pkg.vhd
 ghdl -a --ieee=synopsys --std=08 source/hVHDL_math_library/multiplier/multiplier_pkg.vhd
 ghdl -a --ieee=synopsys --std=08 source/hVHDL_math_library/division/division_internal_pkg.vhd
@@ -45,6 +46,8 @@ ghdl -a --ieee=synopsys --std=08 source/hVHDL_math_library/division/division_pkg
 ghdl -a --ieee=synopsys --std=08 source/hVHDL_math_library/division/division_pkg_body.vhd
 ghdl -a --ieee=synopsys --std=08 source/hVHDL_math_library/sincos/sincos_pkg.vhd
 ghdl -a --ieee=synopsys --std=08 source/hVHDL_math_library/first_order_filter/first_order_filter_pkg.vhd
+
+ghdl -a --ieee=synopsys --std=08 source/hVHDL_math_library/pi_controller/pi_controller_pkg.vhd
 
 ghdl -a --ieee=synopsys --std=08 source/hVHDL_math_library/real_to_fixed/real_to_fixed_pkg.vhd
 rem ghdl -a --ieee=synopsys --std=08 source/hVHDL_dynamic_model_verification_library/hVHDL_math_library/real_to_fixed/real_to_fixed_pkg.vhd
@@ -54,7 +57,8 @@ ghdl -a --ieee=synopsys --std=08 source/hVHDL_dynamic_model_verification_library
 ghdl -a --ieee=synopsys --std=08 source/hVHDL_dynamic_model_verification_library/lcr_filter_model/lcr_filter_model_pkg.vhd                     
 ghdl -a --ieee=synopsys --std=08 source/hVHDL_dynamic_model_verification_library/buck_simulation_model/filtered_buck_model_pkg.vhd
 
-ghdl -a --ieee=synopsys --std=08 source/hil_simulation/hil_simulation_pkg.vhd
+ghdl -a --ieee=synopsys --std=08 source/hil_simulation/hil_simulation_rtl_pkg.vhd
+ghdl -a --ieee=synopsys --std=08 source/hil_simulation/hil_simulation.vhd
 
 ghdl -a --ieee=synopsys --std=08 source/hVHDL_uart/uart_transreceiver/uart_tx/uart_tx_pkg.vhd
 ghdl -a --ieee=synopsys --std=08 source/hVHDL_uart/uart_transreceiver/uart_rx/uart_rx_pkg.vhd
