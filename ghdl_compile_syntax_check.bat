@@ -39,7 +39,7 @@ ghdl -a --ieee=synopsys --std=08 source/hVHDL_memory_library/fpga_ram/ram_config
 ghdl -a --ieee=synopsys --std=08 source/hVHDL_memory_library/fpga_ram/ram_read_port_pkg.vhd
 
 ghdl -a --ieee=synopsys --std=08 source/hVHDL_math_library/multiplier/configuration/multiply_with_1_input_and_output_registers_pkg.vhd
-ghdl -a --ieee=synopsys --std=08 source/hVHDL_math_library/multiplier/multiplier_base_types_18bit_pkg.vhd
+ghdl -a --ieee=synopsys --std=08 source/hVHDL_math_library/multiplier/multiplier_base_types_26bit_pkg.vhd
 ghdl -a --ieee=synopsys --std=08 source/hVHDL_math_library/multiplier/multiplier_pkg.vhd
 ghdl -a --ieee=synopsys --std=08 source/hVHDL_math_library/division/division_internal_pkg.vhd
 ghdl -a --ieee=synopsys --std=08 source/hVHDL_math_library/division/division_pkg.vhd

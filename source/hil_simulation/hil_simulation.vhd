@@ -36,6 +36,11 @@ architecture rtl of hil_simulation is
 
     signal pi_multiplier : multiplier_record    := init_multiplier;
     signal pi_controller : pi_controller_record := pi_controller_init;
+    signal vpi_multiplier : multiplier_record    := init_multiplier;
+    signal vpi_controller : pi_controller_record := pi_controller_init;
+
+    signal load_resistor : int := to_fixed(1.0/3.0, 20);
+    signal voltage_reference : int := 5000;
 
 begin
 
@@ -61,6 +66,26 @@ begin
             return current/2**7+32768;
             
         end scale_current_to_16_bit;
+
+        function limit_to_6000
+        (
+            number : integer
+        )
+        return integer
+        is
+            variable return_value : integer;
+        begin
+            if number > 16000 then
+                return_value := 16000;
+            elsif number < -16000 then
+                return_value := -16000;
+            else
+                return_value := number;
+            end if;
+
+            return return_value;
+            
+        end limit_to_6000;
         
     begin
         if rising_edge(clk) then
@@ -77,16 +102,19 @@ begin
             connect_read_only_data_to_address(bus_to_hil_simulator , bus_from_hil_simulator , 1009 , scale_voltage_to_16_bit(get_capacitor_voltage(filtered_buck.output_lc1)));
             connect_read_only_data_to_address(bus_to_hil_simulator , bus_from_hil_simulator , 1010 , scale_current_to_16_bit(get_inductor_current(filtered_buck.output_lc2)));
             connect_read_only_data_to_address(bus_to_hil_simulator , bus_from_hil_simulator , 1011 , scale_voltage_to_16_bit(get_capacitor_voltage(filtered_buck.output_lc2)));
-            connect_data_to_address(bus_to_hil_simulator           , bus_from_hil_simulator , 1012 , duty_ratio);
-
+            connect_read_only_data_to_address(bus_to_hil_simulator , bus_from_hil_simulator , 1012 , duty_ratio);
             connect_read_only_data_to_address(bus_to_hil_simulator , bus_from_hil_simulator , 1013 , div_result+32768);
+            connect_data_to_address(bus_to_hil_simulator           , bus_from_hil_simulator , 1014 , voltage_reference);
+            connect_read_only_data_to_address(bus_to_hil_simulator , bus_from_hil_simulator , 1015 , scale_current_to_16_bit(get_dc_link_current(filtered_buck)));
 
             create_multiplier(div_multiplier);
             create_division(div_multiplier, divider);
 
-            create_pi_control_and_multiplier(pi_controller, pi_multiplier, to_fixed(5.5, 12), to_fixed(0.10, 12));
+            create_pi_control_and_multiplier(vpi_controller , pi_multiplier , to_fixed(0.001 , 16) , to_fixed(0.001 , 16)   , 2**19 , -2**19);
+            create_pi_controller(pi_multiplier              , pi_controller , to_fixed(15.5  , 12) , to_fixed(0.05  , 12));
+            duty_ratio <= get_pi_control_output(pi_controller);
 
-            create_filtered_buck(filtered_buck, get_pi_control_output(pi_controller), input_voltage*2**10, radix_multiply(get_capacitor_voltage(filtered_buck.output_lc2), to_fixed(1.0/1.0, 20), 26, 20));
+            create_filtered_buck(filtered_buck, get_pi_control_output(pi_controller) + limit_to_6000(div_result/4)*0, input_voltage*2**10, load_current * 2**7 + radix_multiply(get_capacitor_voltage(filtered_buck.output_lc2), to_fixed(1.0/100.0, 20), 26, 20));
 
             if simulation_counter > 0 then
                 simulation_counter <= simulation_counter - 1;
@@ -97,7 +125,11 @@ begin
             if simulation_counter = 0 then
                 request_filtered_buck_calculation(filtered_buck);
                 request_division(divider, get_capacitor_voltage(filtered_buck.primary_lc)/2,get_capacitor_voltage(filtered_buck.input_lc2)/2);
-                request_pi_control(pi_controller, 5200 - get_inductor_current(filtered_buck.primary_lc)/2**10);
+                request_pi_control(pi_controller, get_pi_control_output(vpi_controller)/2**4 - get_inductor_current(filtered_buck.primary_lc)/2**11);
+            end if;
+
+            if pi_control_is_ready(pi_controller) then
+                request_pi_control(vpi_controller, voltage_reference - get_capacitor_voltage(filtered_buck.primary_lc)/2**10);
             end if;
             if division_is_ready(div_multiplier, divider) then
                 div_result <= get_division_result(div_multiplier , divider , int_word_length-1)/2**10;

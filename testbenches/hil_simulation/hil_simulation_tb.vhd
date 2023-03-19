@@ -15,7 +15,7 @@ end;
 architecture vunit_simulation of hil_simulation_tb is
 
     constant clock_period      : time    := 1 ns;
-    constant simtime_in_clocks : integer := 50000;
+    constant simtime_in_clocks : integer := 100000;
     
     signal simulator_clock     : std_logic := '0';
     signal simulation_counter  : natural   := 0;
@@ -50,37 +50,13 @@ begin
             simulation_counter <= simulation_counter + 1;
             init_bus(bus_from_stimulus);
 
-
-            if simulation_counter mod 2 = 0 then
-                request_data_from_address(bus_from_stimulus, 1000);
-            else
-                request_data_from_address(bus_from_stimulus, 1001);
-            end if;
-
-            if simulation_counter = 1000 then
-                write_data_to_address(bus_from_stimulus, 1000, 12800);
-            end if;
-
-            if simulation_counter = 1012 then
-                write_data_to_address(bus_from_stimulus, 1012, 16384);
-            end if;
-
-
-            if write_to_address_is_requested(bus_from_hil, 0) then
-                if receive_counter = 0 then
-                    receive_counter <= receive_counter + 1;
-                else
-                    receive_counter <= 0;
-                end if;
-            end if;
-
-            if write_to_address_is_requested(bus_from_hil,0) then
-                if receive_counter = 0 then
-                    current <= get_data(bus_from_hil);
-                else
-                    voltage <= get_data(bus_from_hil);
-                end if;
-            end if;
+            CASE simulation_counter is
+                -- WHEN 1000 => write_data_to_address(bus_from_stimulus, 1000, 12800);
+                -- WHEN 25e3 => write_data_to_address(bus_from_stimulus, 1014, 0);
+                -- WHEN 45e3 => write_data_to_address(bus_from_stimulus, 1001, 15000);
+                -- WHEN 60e3 => write_data_to_address(bus_from_stimulus, 1001, 0);
+                WHEN others => -- do nothing
+            end CASE;
 
         end if; -- rising_edge
     end process stimulus;	
