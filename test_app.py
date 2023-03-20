@@ -22,11 +22,11 @@ def exitation():
     time.sleep(0.15)
     uart.write_data_to_address(1014, 7000);
     time.sleep(0.1)
-    uart.write_data_to_address(1001, 1000);
+    uart.write_data_to_address(1001, 2500);
     time.sleep(0.1)
     # uart.write_data_to_address(1000, 12800);
     time.sleep(0.1)
-    uart.write_data_to_address(1001, 500);
+    uart.write_data_to_address(1001, 0);
 
     # uart.write_data_to_address(1000, 8646);
     # uart.write_data_to_address(1001, 0);
@@ -54,7 +54,7 @@ pyplot.subplot(4, 1, 1)
 pyplot.plot(get_voltage(1007))
 pyplot.subplot(4, 1, 2)
 pyplot.plot(get_current(1004))
-# pyplot.plot(get_current(1006))
+pyplot.plot(get_current(1006))
 pyplot.plot(get_current(1015))
 pyplot.subplot(4, 1, 3)
 pyplot.plot(get_data(1012))

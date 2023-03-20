@@ -75,10 +75,10 @@ begin
         is
             variable return_value : integer;
         begin
-            if number > 16000 then
-                return_value := 16000;
-            elsif number < -16000 then
-                return_value := -16000;
+            if number > 32767 then
+                return_value := 32767;
+            elsif number < -32768 then
+                return_value := -32768;
             else
                 return_value := number;
             end if;
@@ -110,11 +110,11 @@ begin
             create_multiplier(div_multiplier);
             create_division(div_multiplier, divider);
 
-            create_pi_control_and_multiplier(vpi_controller , pi_multiplier , to_fixed(0.001 , 16) , to_fixed(0.001 , 16)   , 2**19 , -2**19);
-            create_pi_controller(pi_multiplier              , pi_controller , to_fixed(15.5  , 12) , to_fixed(0.05  , 12));
+            create_pi_control_and_multiplier(vpi_controller , pi_multiplier , to_fixed(0.08 , 17) , to_fixed(0.0001 , 17)   , 2**19 , -2**19);
+            create_pi_controller(pi_controller              , pi_multiplier , to_fixed(15.5  , 12) , to_fixed(0.025  , 12), limit_to_6000(div_result));
             duty_ratio <= get_pi_control_output(pi_controller);
 
-            create_filtered_buck(filtered_buck, get_pi_control_output(pi_controller) + limit_to_6000(div_result/4)*0, input_voltage*2**10, load_current * 2**7 + radix_multiply(get_capacitor_voltage(filtered_buck.output_lc2), to_fixed(1.0/100.0, 20), 26, 20));
+            create_filtered_buck(filtered_buck, get_pi_control_output(pi_controller), input_voltage*2**10, load_current * 2**7);
 
             if simulation_counter > 0 then
                 simulation_counter <= simulation_counter - 1;
@@ -125,14 +125,12 @@ begin
             if simulation_counter = 0 then
                 request_filtered_buck_calculation(filtered_buck);
                 request_division(divider, get_capacitor_voltage(filtered_buck.primary_lc)/2,get_capacitor_voltage(filtered_buck.input_lc2)/2);
-                request_pi_control(pi_controller, get_pi_control_output(vpi_controller)/2**4 - get_inductor_current(filtered_buck.primary_lc)/2**11);
-            end if;
-
-            if pi_control_is_ready(pi_controller) then
                 request_pi_control(vpi_controller, voltage_reference - get_capacitor_voltage(filtered_buck.primary_lc)/2**10);
             end if;
+
             if division_is_ready(div_multiplier, divider) then
                 div_result <= get_division_result(div_multiplier , divider , int_word_length-1)/2**10;
+                request_pi_control(pi_controller, get_pi_control_output(vpi_controller)/2**4 - get_inductor_current(filtered_buck.primary_lc)/2**11);
             end if;
 
         end if; --rising_edge
