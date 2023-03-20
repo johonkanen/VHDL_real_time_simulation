@@ -110,8 +110,8 @@ begin
             create_multiplier(div_multiplier);
             create_division(div_multiplier, divider);
 
-            create_pi_control_and_multiplier(vpi_controller , pi_multiplier , to_fixed(0.08 , 17) , to_fixed(0.0001 , 17)   , 2**19 , -2**19);
-            create_pi_controller(pi_controller              , pi_multiplier , to_fixed(15.5  , 12) , to_fixed(0.025  , 12), limit_to_6000(div_result));
+            create_pi_control_and_multiplier(vpi_controller , pi_multiplier , to_fixed(0.01 , 17) , to_fixed(0.0002 , 17)   , 2**19 , -2**19);
+            create_pi_controller(pi_controller              , pi_multiplier , to_fixed(25.5  , 12) , to_fixed(0.5  , 12), limit_to_6000(div_result));
             duty_ratio <= get_pi_control_output(pi_controller);
 
             create_filtered_buck(filtered_buck, get_pi_control_output(pi_controller), input_voltage*2**10, load_current * 2**7);

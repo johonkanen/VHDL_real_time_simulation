@@ -17,18 +17,20 @@ voltage_to_fixed_point = 12800/400;
 
 def exitation():
     time.sleep(0.025)
-    # uart.write_data_to_address(1000, 15000);
+    uart.write_data_to_address(1000, 15000);
+    time.sleep(0.075)
     uart.write_data_to_address(1014, 2000) 
-    time.sleep(0.15)
+    time.sleep(0.075)
     uart.write_data_to_address(1014, 7000);
     time.sleep(0.1)
     uart.write_data_to_address(1001, 2500);
     time.sleep(0.1)
-    # uart.write_data_to_address(1000, 12800);
+    uart.write_data_to_address(1000, 12800);
     time.sleep(0.1)
     uart.write_data_to_address(1001, 0);
+    time.sleep(0.1)
 
-    # uart.write_data_to_address(1000, 8646);
+    # uart.write_data_to_address(1000, 12800);
     # uart.write_data_to_address(1001, 0);
     # time.sleep(0.1)
     # uart.write_data_to_address(1012, int(25000))
