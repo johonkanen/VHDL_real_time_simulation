@@ -28,6 +28,7 @@ math_library_26x26.add_source_files(ROOT / "source/hVHDL_math_library/division/d
 math_library_26x26.add_source_files(ROOT / "source/hVHDL_math_library/pi_controller/pi_controller_pkg.vhd")
 
 
+math_library_26x26.add_source_files(ROOT / "source/hVHDL_dynamic_model_verification_library/half_bridge_model/half_bridge_pkg.vhd")
 math_library_26x26.add_source_files(ROOT / "source/hVHDL_dynamic_model_verification_library/state_variable/state_variable_pkg.vhd                             ")
 math_library_26x26.add_source_files(ROOT / "source/hVHDL_dynamic_model_verification_library/lcr_filter_model/lcr_filter_model_pkg.vhd                         ")
 math_library_26x26.add_source_files(ROOT / "source/hVHDL_dynamic_model_verification_library/buck_simulation_model/filtered_buck_model_pkg.vhd")
